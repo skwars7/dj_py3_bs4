@@ -1,0 +1,4 @@
+{% for key,value in mylist.items %}
+	<p>  {{ forloop.counter }}.
+      {{value.sal}} => <a href="{{value.link}}"> link for this job</a> {{value.link}}</p>
+{% endfor %}
