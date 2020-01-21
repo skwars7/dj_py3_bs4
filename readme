@@ -1,0 +1,6 @@
+use folowwing command to install required librabry and framwork
+pip install django==1.11.3
+pip install requests
+pip install bs4
+rest of the information please check the views.py inside itscrap folder
+to run this jump go to the itsahala folder and enter "python django runserver"
