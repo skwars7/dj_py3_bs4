@@ -18,15 +18,15 @@ def index(request):
 	mylist = {}
 	i = int(0)
 	#start loop for get data from desire website
-	for p in range(10):#change range accordingly how many page you want to surf
+	for p in range(50):#change range accordingly how many page you want to surf
 		print('number',p)
 		#urls defining
-		url = "https://internshala.com/internships/big%20data,data%20science,machine%20learning,python%2Fdjango-internship-in-bangalore/page-"+str(c)
-		print(url)
+		url = "https://internshala.com/internships/internship-in-bangalore/page-"+str(c)
 		c = int(c) + 1
 		# print(url)
 		response = requests.get(url)
 		html = response.content
+		# print(html)
 		soup = BeautifulSoup(html, "html.parser")
 		# print(soup)
 		test = soup.findAll('div',attrs={'class','individual_internship'})
@@ -34,24 +34,38 @@ def index(request):
 		for a in test:
 			tempin = a.find('td',attrs={'class','stipend_container_table_cell'})
 			link = a.find('a',attrs={'class','view_detail_button'})
-			if link == None:
+			if link == None or tempin == None:
 				continue
-			print('salary->',tempin.text,'|----|link-> ',link.get('href'))
+			print('---------------------------------')
+			print('salary---->',tempin.text.strip().lower(),'|----|link-> ',link.get('href'))
 			f_link = 'https://internshala.com'+link.get('href')
 			f_sal = tempin.text.strip()
 			f_sal = f_sal.split('/')
 			if re.search("-",f_sal[0]) and f_sal:
 				f_sal = f_sal[0].split('-')
-				# print(f_sal[0],"it's inside")
-				f_sal0 = int(f_sal[0])
-				f_sal1 = int(f_sal[1])
+				print(f_sal[0],"it's inside")
+				fal = f_sal[0].lower()
+				if re.search("lump",fal) and f_sal:
+					f_sal0 = fal.split(' ')
+					f_sal0 = int(f_sal0[0])
+				else:	
+					f_sal0 = int(f_sal[0])
+				f_sal1 = f_sal[1]
 				if f_sal0 >= 10000:
 					i += 1
 					mylist.update({i :{ 'sal': str(f_sal0)+"-"+str(f_sal1),'link': f_link}})
 				else:
 					continue
-			if f_sal[0].lower() != 'unpaid':
-				# print('out '+f_sal[0]+' out side')
+			print('-------------------------------------------------')
+			print(f_sal[0].lower(),'unpaid',f_sal[0].lower(),'Performance Based')
+			print('-------------------------------------------------')
+			fal = f_sal[0].lower()
+			if re.search("lump",fal) or re.search("not provided",fal) and fal :
+				continue
+			if f_sal[0].lower() == 'unpaid' or f_sal[0].lower() == 'performance based':
+				continue
+			else:
+				print('out '+f_sal[0]+' out side')
 				f_salo = int(f_sal[0])
 				if f_salo >= 10000:
 					i += 1
